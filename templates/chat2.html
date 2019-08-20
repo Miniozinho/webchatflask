@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+            var carregou = false;
+
+                var socket;
+
+    socket = io.connect('//' + document.domain + ':' + location.port);
+
+    socket.on('message', function(data){
+        //pegar cor no localstorage a partir do nick
+        //criar seletor de cor no html
+        //cor fica salva no localstorage
+        var cor = localStorage.getItem(data.name);
+        document.getElementById('chatbox').innerHTML += '<div style="padding-left: 20px;"><p class="chattext" style="font-size:25px;text-shadow: 1px 0.1em 0.1em black; "><strong style="text-shadow: 1px 0.1em 0.1em black; color:'+cor+';">' + data.name + ': </strong>' + data.message + '</p></div>';
+         gerarfont();
+    });
+
+    function teste(){
+        if(document.getElementById('usermsg').value!="") {
+            var inome = document.getElementById('nickname');
+            var imessage = document.getElementById('usermsg');
+
+            socket.emit('message', {name: inome.value, message: imessage.value});
+            gerarfont();
+            document.getElementById("usermsg").value = "";
+        }
+    };
+
+
+    function entermsg(z){
+        if (event.key == "Enter"){
+			teste()
+		}
+    }
+
+	function checarenter(z){
+
+		if (event.key == "Enter"){
+			if (z.value.length<4){
+				alert("Seu Nickname deve possuir pelo menos 4 caracteres!");
+			} else if(z.value.length>25){
+				alert("Seu Nickname nao pode ultrapassar 25 caracteres!")
+			}else{
+				//login display none
+				//parte do chat aparece
+				//enviar nickname para o flask
+				var nick = z.value;
+				document.getElementById("login").style.display = "none";
+				document.getElementById("batepapo").style.display = "block";
+				var img = localStorage.getItem("imagem");
+				document.body.style.backgroundImage = "url('static/img/"+img+".jpg')";
+
+			}
+		}
+	}
+
+
+	function changefontcolor(x) {
+         var inome = document.getElementById('nickname').value;
+        localStorage.setItem(inome, x);
+    }
+
+    function abrirmenu(){
+         document.getElementById("meumenu").style.width = "100%";
+            document.getElementById('selecionar').style.display = 'inline-block';
+    }
+
+    function fecharmenu(){
+         document.getElementById("meumenu").style.width = "0";
+         document.getElementById('backs').style.display = 'none';
+         document.getElementById('botao').style.display = 'none';
+         document.getElementById('fontes').style.display = 'none';
+         document.getElementById('fontcolor').style.display = 'none';
+
+    }
+
+    function mostrarbac(){
+	    if (!carregou) {
+	        gerarOpcoes();
+	        carregou = true;
+        }
+        document.getElementById('backs').style.display = 'block';
+        document.getElementById('selecionar').style.display = 'none';
+    }
+
+    function mostrarbut(){
+
+        document.getElementById('botao').style.display = 'block';
+        document.getElementById('selecionar').style.display = 'none';
+    }
+    function mostrarfont(){
+      document.getElementById('selecionar').style.display = 'none';
+      document.getElementById('fontes').style.display = 'block';
+    }
+
+    function mostrarfontcolor(){
+        document.getElementById('selecionar').style.display = 'none';
+        document.getElementById('fontcolor').style.display = 'block';
+    }
+
+    function change(x){
+        localStorage.setItem("imagem",x);
+	    document.body.style.backgroundImage = "url(\"../static/img/"+x+".jpg\")";
+    }
+
+
+
+function gerarOpcoes() {
+        //gera o seletor de backgrounds
+        var gerar = "<div id='backs'>"
+
+        {% for x in imgs %}
+            gerar += "<div style=\"background-image: url('../static/img/{{ x }}.jpg');\" id=\"colorselec\" onclick=\"change({{ x }})\"></div>"
+        {% endfor %}
+        gerar += "</div>";
+        document.getElementById('backs').innerHTML = gerar;
+    }
+
+
+    function fontelocalstorage(x) {
+        localStorage.setItem("fonte", x);
+        gerarfont();
+    }
+
+ function gerarfont(){
+var x = localStorage.getItem("fonte");
+
+  var cols = document.getElementsByClassName('chattext');
+  for(i = 0; i < cols.length; i++) {
+    cols[i].style.fontFamily = x;
+  }
+document.getElementById("usermsg").style.fontFamily = x;
+document.getElementById("sendmsg").style.fontFamily = x;
+document.getElementById("titulo").style.fontFamily = x;
+document.getElementById("nickname").style.fontFamily = x;
+
+ }
+
+ function changebuton(x){
+document.getElementById("sendmsg").style.backgroundColor = x;
+ }
+
+ function changebutoncolor(x){
+document.getElementById("sendmsg").style.color = x;
+ }
+
+
+
+</script>
+
+  <!--MinecraftiaRegular--
+  <link rel="stylesheet" media="screen" href="https://fontlibrary.org/face/minecraftia" type="text/css"/>
+
+  <!--BeonRegular--
+  <link rel="stylesheet" media="screen" href="https://fontlibrary.org/face/beon" type="text/css"/>
+
+  <!--CMUTypewriterTextRegular--
+  <link rel="stylesheet" media="screen" href="https://fontlibrary.org/face/cmu-typewriter" type="text/css"/>
+
+  <!--DatalegreyaDot--
+  <link rel="stylesheet" media="screen" href="https://fontlibrary.org/face/datalegreya" type="text/css"/>
+
+  <!--ArchicocoRegular--
+  <link rel="stylesheet" media="screen" href="https://fontlibrary.org/face/archicoco" type="text/css"/>
+
+  <!--QuaeriteRegnumDeiRegular--
+  <link rel="stylesheet" media="screen" href="https://fontlibrary.org/face/quaerite-regnum-dei" type="text/css"/>
+
+  <!--DancingScriptRegular--
+  <link rel="stylesheet" media="screen" href="https://fontlibrary.org/face/dancing" type="text/css"/>
+
+  <!--BananaBrickRegular--
+  <link rel="stylesheet" media="screen" href="https://fontlibrary.org/face/banana-brick" type="text/css"/>
+
+  <!--SomeTimeLaterRegular--
+  <link rel="stylesheet" media="screen" href="https://fontlibrary.org/face/some-time-later" type="text/css"/>
+
+  <!--KaushanScriptRegular--
+  <link rel="stylesheet" media="screen" href="https://fontlibrary.org/face/kaushan-script" type="text/css"/>
+
+
+  <!--Alterar'p' 'usermsg' 'sendmsg' 'titulo' 'nickname'-->
+	    <style type="text/css">
+        /* CSS Document */
+
+        @font-face {
+     font-family: MinecraftiaRegular;
+     src: url('static/fonts/Minecraftia-Regular.ttf');
+}
+         @font-face {
+     font-family: BeonRegular;
+     src: url('static/fonts/beon-webfont.ttf');
+}
+         @font-face {
+     font-family: CMUTypewriterTextRegular;
+     src: url('static/fonts/cmu-typewriter-text-regular.ttf');
+}
+         @font-face {
+     font-family: DatalegreyaDot;
+     src: url('static/fonts/Datalegreya-Gradient.otf');
+}
+                 @font-face {
+     font-family: ArchicocoRegular;
+     src: url('static/fonts/HARRYP__.TTF');
+}
+                 @font-face {
+     font-family: QuaeriteRegnumDeiRegular;
+     src: url('static/fonts/quaerite-regnum-dei-maisfontes.otf');
+}
+                 @font-face {
+     font-family: DancingScriptRegular;
+     src: url('static/fonts/DancingScript-Regular.otf');
+}
+                 @font-face {
+     font-family: BananaBrickRegular;
+     src: url('static/fonts/banana-brick.regular.ttf');
+}
+                 @font-face {
+     font-family: SomeTimeLaterRegular;
+     src: url('static/fonts/Some Time Later.otf');
+}
+                 @font-face {
+     font-family: KaushanScriptRegular;
+     src: url('static/fonts/KaushanScript-Regular.otf');
+}
+
+#batepapo{
+	display: none;
+}
+
+.style-8::-webkit-scrollbar-track
+{
+    border: 1px solid black;
+    background-color: #F5F5F5;
+}
+
+.style-8::-webkit-scrollbar
+{
+    width: 10px;
+    background-color: #F5F5F5;
+}
+
+.style-8::-webkit-scrollbar-thumb
+{
+    background-color: #000000;
+}
+
+
+.chattext{
+    color:white;
+    font-family: 'MinecraftiaRegular';
+}
+
+.button {
+    padding: 0px;
+  border: none;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 20px;
+  transition-duration: 0.4s;
+  cursor: pointer;
+}
+
+#wrapper {
+    border-left: solid;
+    border-right: solid;
+    margin:0 auto;
+    width:80%;
+    height: 90vh;
+
+     }
+
+
+#chatbox {
+    text-align:left;
+    margin:0 auto;
+    /*background:#3F4a4F;*/
+    height:90vh;
+    width:100%;
+    overflow:auto;
+}
+
+
+#usermsg {
+    border:none;
+    float: left;
+    bottom: 0;
+    padding-left: 2.5%;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin: 0px;
+    width:77.5%;
+    height: 10vh;
+    font-family: "MinecraftiaRegular";
+    font-size: 40px;
+    }
+
+#sendmsg{
+	font-family: "MinecraftiaRegular";
+    float: right;
+    bottom: 0;
+    width: 20%;
+    height: 10vh;
+    background-color: #e74c3c;
+  color: white;
+  outline: none;
+}
+
+
+#enviar{
+
+    height: 10vh;
+}
+
+    </style>
+	<style type="text/css">
+	body{
+		margin:0px;
+		padding: 0px;
+
+		background-color: #222;
+		background-attachment: fixed;
+		background-repeat: no-repeat;
+        background-size: 100%;
+	}
+	#titulo{
+		font-family: 'MinecraftiaRegular';
+		margin: 0px;
+		color:white;
+		font-size:100px;
+	}
+	#nickname{
+		padding-top: 20px;
+		font-family: 'MinecraftiaRegular';
+		text-align: center;
+		font-size:75px;
+		border:none;
+		background-color:#222;
+		border-bottom: 2px solid white;
+		color:white;
+	}
+
+		#login{
+			text-align: center;
+			height: 100vh;
+			font-size: 40px;
+			}
+
+		#container{
+  height: 100px;
+  margin-top: -100px;
+  position: absolute;
+  top: 50%;
+  width: 100%;
+		}
+
+
+    #menu {
+    -moz-box-shadow:inset 0px 0px 22px 7px #23395e;
+    -webkit-box-shadow:inset 0px 0px 22px 7px #23395e;
+    box-shadow:inset 0px 0px 22px 7px #23395e;
+    background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #2e466e), color-stop(1, #415989));
+    background:-moz-linear-gradient(top, #2e466e 5%, #415989 100%);
+    background:-webkit-linear-gradient(top, #2e466e 5%, #415989 100%);
+    background:-o-linear-gradient(top, #2e466e 5%, #415989 100%);
+    background:-ms-linear-gradient(top, #2e466e 5%, #415989 100%);
+    background:linear-gradient(to bottom, #2e466e 5%, #415989 100%);
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#2e466e', endColorstr='#415989',GradientType=0);
+    background-color:#2e466e;
+    -moz-border-radius:18px;
+    -webkit-border-radius:18px;
+    border-radius:18px;
+    border:3px solid #1f2f47;
+    display:inline-block;
+    cursor:pointer;
+    color:#ffffff;
+    font-family:Arial;
+    font-size:5vw;
+    padding:0px;
+    width: 8vw;
+    height: 8vw;
+    text-decoration:none;
+    text-shadow:0px 0px 0px #263666;
+    position: fixed;
+    margin-top: 1vw;
+    margin-left: 1vw;
+}
+
+#menu:active {
+    top:2px;
+    font-size: 4.5vw;
+}
+
+
+.sidenav {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.85);
+  overflow-x: hidden;
+  transition: 0.7s;
+  padding-top: 60px;
+  text-align:center;
+}
+
+.sidenav a {
+  padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 100px;
+  color: #818181;
+  display: block;
+  transition: 0.3s;
+
+}
+
+.sidenav a:hover{
+  color: #f1f1f1;
+  cursor: pointer;
+  font-size: 140px;
+}
+
+.sidenav .closebtn:hover{
+  font-size: 36px;
+}
+
+.sidenav .closebtn {
+  position: absolute;
+  top: 0;
+  right: 25px;
+  font-size: 36px;
+  margin-left: 50px;
+}
+
+#colorselec{
+    margin: 1vw;
+    height: 20vw;
+    width: 20vw;
+    background-size: 200%;
+    background-position: center;
+    border: solid white 2px;
+    display: inline-block;
+}
+
+#butonselec{
+    margin: 1vw;
+    height: 20vw;
+    width: 20vw;
+    border: solid white 2px;
+    display: inline-block;
+}
+
+#fontcolor{
+    display:none;
+}
+#botao{
+    display: none;
+}
+
+#background{
+    display: none;
+}
+
+#fontselec{
+
+  width:40vw;
+  height: 25vw;
+  background-color: black;
+  color:white;
+  display: inline-table;
+  border: solid black 3px;
+  border-radius: 20px;
+  font-size: 18px;
+  margin: 1vw;
+}
+
+#fontselec h1{
+  padding: 2vw;
+}
+
+#fontes{
+  display: none;
+}
+	</style>
+	<title>	WebChat em Flask</title>
+</head>
+<body onload="gerarfont()">
+
+<div id="login">
+	<div id="container">
+<p id="titulo">Digite o seu nickname</p>
+<input onkeydown="checarenter(this);" id="nickname" style="width: 50%;" id="nome" maxlength="25"/>
+</div>
+</div>
+<!--style="background-color: white; border: solid 2px black; text-align: center; position: fixed;margin: 0px; width: 8vw;height: 8vw"-->
+<!--style="text-align: center; font-size:6vw;margin: 0px;"-->
+<!-- Parte do chat!-->
+<div id="batepapo">
+<div id="meumenu" class="sidenav">
+  <a href="javascript:void(0)" class="closebtn" onclick="fecharmenu()">&times;</a>
+  <div id="selecionar">
+    <br>
+      <a onclick="mostrarbac();">Escolher Backgrounds</a>
+      <a onclick="mostrarfont();">Escolher Fontes</a>
+      <a onclick="mostrarbut();">Escolher Botão</a>
+      <a onclick="mostrarfontcolor();">Escolher Cor do nickname</a>
+  </div>
+  <div id="backs"></div>
+<div id="fontes">
+  <div onclick="fontelocalstorage('MinecraftiaRegular');" id="fontselec" style="font-family: 'MinecraftiaRegular';">
+    <h1 >Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris scelerisque est nisi, </h1>
+  </div>
+  <div onclick="fontelocalstorage('BeonRegular');" id="fontselec" style="font-family: 'BeonRegular';">
+    <h1 >Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris scelerisque est nisi, </h1>
+  </div>
+  <div onclick="fontelocalstorage('CMUTypewriterTextRegular');" id="fontselec" style="font-family: 'CMUTypewriterTextRegular';">
+    <h1 >Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris scelerisque est nisi, </h1>
+  </div>
+  <div onclick="fontelocalstorage('DatalegreyaDot');" id="fontselec" style="font-family: 'DatalegreyaDot';">
+    <h1 >Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris scelerisque est nisi, </h1>
+  </div>
+  <div onclick="fontelocalstorage('ArchicocoRegular');" id="fontselec" style="font-family: 'ArchicocoRegular';">
+    <h1 >Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris scelerisque est nisi, </h1>
+  </div>
+  <div onclick="fontelocalstorage('QuaeriteRegnumDeiRegular');" id="fontselec" style="font-family: 'QuaeriteRegnumDeiRegular';">
+    <h1 >Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris scelerisque est nisi, </h1>
+  </div>
+  <div onclick="fontelocalstorage('DancingScriptRegular');" id="fontselec" style="font-family: 'DancingScriptRegular';">
+    <h1 >Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris scelerisque est nisi, </h1>
+  </div>
+  <div onclick="fontelocalstorage('BananaBrickRegular');" id="fontselec" style="font-family: 'BananaBrickRegular';">
+    <h1 >Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris scelerisque est nisi, </h1>
+  </div>
+  <div onclick="fontelocalstorage('SomeTimeLaterRegular');" id="fontselec" style="font-family: 'SomeTimeLaterRegular';">
+    <h1 >Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris scelerisque est nisi, </h1>
+  </div>
+  <div onclick="fontelocalstorage('KaushanScriptRegular');" id="fontselec" style="font-family: 'KaushanScriptRegular';">
+    <h1 >Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris scelerisque est nisi, </h1>
+  </div>
+</div>
+<div id="botao">
+    <h1 style="font-size: 70px; color: white;">Cor dos Botões</h1>
+    <br>
+    <div id="butonselec" style="background-color: red;" onclick="changebuton('red');"></div>
+    <div id="butonselec" style="background-color: green;" onclick="changebuton('green');"></div>
+    <div id="butonselec" style="background-color: blue;" onclick="changebuton('blue');"></div>
+    <div id="butonselec" style="background-color: white;" onclick="changebuton('white');"></div>
+    <div id="butonselec" style="background-color: gray;" onclick="changebuton('gray');"></div>
+    <div id="butonselec" style="background-color: azure;" onclick="changebuton('azure');"></div>
+    <div id="butonselec" style="background-color: orange;" onclick="changebuton('orange');"></div>
+    <div id="butonselec" style="background-color: aqua;" onclick="changebuton('aqua');"></div>
+    <div id="butonselec" style="background-color: cyan;" onclick="changebuton('cyan');"></div>
+    <div id="butonselec" style="background-color: darkgrey;" onclick="changebuton('darkgrey');"></div>
+    <div id="butonselec" style="background-color: darkmagenta;" onclick="changebuton('darkmagenta');"></div>
+    <div id="butonselec" style="background-color: darkorchid;" onclick="changebuton('darkorchid');"></div>
+    <div id="butonselec" style="background-color: darkslategray;" onclick="changebuton('darkslategray');"></div>
+    <div id="butonselec" style="background-color: floralwhite;" onclick="changebuton('floralwhite');"></div>
+    <div id="butonselec" style="background-color: gold;" onclick="changebuton('gold');"></div>
+    <div id="butonselec" style="background-color: black;" onclick="changebuton('black');"></div>
+
+    <br>
+    <h1  style="font-size: 70px; color: white;">Cor do texto do botão</h1>
+    <br>
+    <div id="butonselec" style="background-color: red;" onclick="changebutoncolor('red');"></div>
+    <div id="butonselec" style="background-color: green;" onclick="changebutoncolor('green');"></div>
+    <div id="butonselec" style="background-color: blue;" onclick="changebutoncolor('blue');"></div>
+    <div id="butonselec" style="background-color: white;" onclick="changebutoncolor('white');"></div>
+    <div id="butonselec" style="background-color: gray;" onclick="changebutoncolor('gray');"></div>
+    <div id="butonselec" style="background-color: azure;" onclick="changebutoncolor('azure');"></div>
+    <div id="butonselec" style="background-color: orange;" onclick="changebutoncolor('orange');"></div>
+    <div id="butonselec" style="background-color: aqua;" onclick="changebutoncolor('aqua');"></div>
+    <div id="butonselec" style="background-color: cyan;" onclick="changebutoncolor('cyan');"></div>
+    <div id="butonselec" style="background-color: darkgrey;" onclick="changebutoncolor('darkgrey');"></div>
+    <div id="butonselec" style="background-color: darkmagenta;" onclick="changebutoncolor('darkmagenta');"></div>
+    <div id="butonselec" style="background-color: darkorchid;" onclick="changebutoncolor('darkorchid');"></div>
+    <div id="butonselec" style="background-color: darkslategray;" onclick="changebutoncolor('darkslategray');"></div>
+    <div id="butonselec" style="background-color: floralwhite;" onclick="changebutoncolor('floralwhite');"></div>
+    <div id="butonselec" style="background-color: gold;" onclick="changebutoncolor('gold');"></div>
+    <div id="butonselec" style="background-color: black;" onclick="changebutoncolor('black');"></div>
+
+
+
+</div>
+
+        <div id="fontcolor">
+         <br>
+    <div id="butonselec" style="background-color: red;" onclick="changefontcolor('red');"></div>
+    <div id="butonselec" style="background-color: green;" onclick="changefontcolor('green');"></div>
+    <div id="butonselec" style="background-color: blue;" onclick="changefontcolor('blue');"></div>
+    <div id="butonselec" style="background-color: gray;" onclick="changefontcolor('gray');"></div>
+    <div id="butonselec" style="background-color: orange;" onclick="changefontcolor('orange');"></div>
+    <div id="butonselec" style="background-color: aqua;" onclick="changefontcolor('aqua');"></div>
+    <div id="butonselec" style="background-color: darkgrey;" onclick="changefontcolor('darkgrey');"></div>
+    <div id="butonselec" style="background-color: darkmagenta;" onclick="changefontcolor('darkmagenta');"></div>
+    <div id="butonselec" style="background-color: darkorchid;" onclick="changefontcolor('darkorchid');"></div>
+    <div id="butonselec" style="background-color: darkslategray;" onclick="changefontcolor('darkslategray');"></div>
+    <div id="butonselec" style="background-color: gold;" onclick="changefontcolor('gold');"></div>
+    <div id="butonselec" style="background-color: cyan;" onclick="changefontcolor('cyan');"></div>
+    <div id="butonselec" style="background-color: black;" onclick="changefontcolor('black');"></div>
+
+    </div>
+
+
+</div>
+
+
+
+
+<button id="menu" onclick="abrirmenu();">
+&#9776
+</button>
+
+<div id="wrapper">
+
+    <div class="style-8"id="chatbox" style="background-color:rgba(2, 2, 2, 0.75)">
+
+
+
+
+
+
+    </div>
+     </div>
+
+    <div id="enviar">
+        <input onkeydown="entermsg(this)" type="text" id="usermsg" />
+        <input onclick="teste()" type="submit"  value="Enviar ->" class="button" id="sendmsg"/>
+
+    </div>
+</div>
+
+</body>
+
+</html>
