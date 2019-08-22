@@ -10,9 +10,6 @@
     socket = io.connect('//' + document.domain + ':' + location.port);
 
     socket.on('message', function(data){
-        //pegar cor no localstorage a partir do nick
-        //criar seletor de cor no html
-        //cor fica salva no localstorage
         var cor = localStorage.getItem(data.name);
         document.getElementById('chatbox').innerHTML += '<div style="padding-left: 20px;"><p class="chattext" style="font-size:25px;text-shadow: 1px 0.1em 0.1em black; "><strong style="text-shadow: 1px 0.1em 0.1em black; color:'+cor+';">' + data.name + ': </strong>' + data.message + '</p></div>';
          gerarfont();
@@ -150,39 +147,6 @@ document.getElementById("sendmsg").style.color = x;
 
 
 </script>
-
-  <!--MinecraftiaRegular--
-  <link rel="stylesheet" media="screen" href="https://fontlibrary.org/face/minecraftia" type="text/css"/>
-
-  <!--BeonRegular--
-  <link rel="stylesheet" media="screen" href="https://fontlibrary.org/face/beon" type="text/css"/>
-
-  <!--CMUTypewriterTextRegular--
-  <link rel="stylesheet" media="screen" href="https://fontlibrary.org/face/cmu-typewriter" type="text/css"/>
-
-  <!--DatalegreyaDot--
-  <link rel="stylesheet" media="screen" href="https://fontlibrary.org/face/datalegreya" type="text/css"/>
-
-  <!--ArchicocoRegular--
-  <link rel="stylesheet" media="screen" href="https://fontlibrary.org/face/archicoco" type="text/css"/>
-
-  <!--QuaeriteRegnumDeiRegular--
-  <link rel="stylesheet" media="screen" href="https://fontlibrary.org/face/quaerite-regnum-dei" type="text/css"/>
-
-  <!--DancingScriptRegular--
-  <link rel="stylesheet" media="screen" href="https://fontlibrary.org/face/dancing" type="text/css"/>
-
-  <!--BananaBrickRegular--
-  <link rel="stylesheet" media="screen" href="https://fontlibrary.org/face/banana-brick" type="text/css"/>
-
-  <!--SomeTimeLaterRegular--
-  <link rel="stylesheet" media="screen" href="https://fontlibrary.org/face/some-time-later" type="text/css"/>
-
-  <!--KaushanScriptRegular--
-  <link rel="stylesheet" media="screen" href="https://fontlibrary.org/face/kaushan-script" type="text/css"/>
-
-
-  <!--Alterar'p' 'usermsg' 'sendmsg' 'titulo' 'nickname'-->
 	    <style type="text/css">
         /* CSS Document */
 
@@ -609,10 +573,6 @@ document.getElementById("sendmsg").style.color = x;
 
 
 </div>
-
-
-
-
 <button id="menu" onclick="abrirmenu();">
 &#9776
 </button>
@@ -620,12 +580,6 @@ document.getElementById("sendmsg").style.color = x;
 <div id="wrapper">
 
     <div class="style-8"id="chatbox" style="background-color:rgba(2, 2, 2, 0.75)">
-
-
-
-
-
-
     </div>
      </div>
 
